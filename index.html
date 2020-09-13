@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WEJV10 - Top ten</title>
+    <link href="https://fonts.googleapis.com/css2?family=Ranchers&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+</head>
+
+<body>
+
+    <script>
+
+        let bulles = [];
+        let numberArray = [];
+
+        const window_width = 640;
+        const window_height = 480;
+
+        var config = {
+            type: Phaser.AUTO,
+            width: window_width,
+            height: window_height,
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            },
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: -50 },
+                    debug: false
+                }
+            }
+        };
+
+        var game = new Phaser.Game(config);
+
+        var somme = 0;
+        var score = 0;
+        var bulleCount = 0;
+
+        function preload() {
+            this.load.image('fond', 'assets/Fond.jpg');
+            this.load.image('bulle', 'assets/bulle.png');
+            this.load.image('piece', 'assets/piece.png');
+            this.load.image('1', 'assets/1.png');
+            this.load.image('2', 'assets/2.png');
+            this.load.image('3', 'assets/3.png');
+            this.load.image('4', 'assets/4.png');
+            this.load.image('5', 'assets/5.png');
+            this.load.image('6', 'assets/6.png');
+            this.load.image('7', 'assets/7.png');
+            this.load.image('8', 'assets/8.png');
+            this.load.image('9', 'assets/9.png');
+            /* this.load.image('10', 'assets/10.png');
+             this.load.image('11', 'assets/11.png');
+             this.load.image('12', 'assets/12.png');
+             this.load.image('13', 'assets/13.png');
+             this.load.image('14', 'assets/14.png');
+             this.load.image('15', 'assets/15.png');
+             this.load.image('16', 'assets/16.png');
+             this.load.image('17', 'assets/17.png');
+             this.load.image('18', 'assets/18.png');*/
+        }
+
+        function create() {
+            this.add.image(window_width / 2, window_height / 2, 'fond');
+            this.add.image(50, game.config.height * 0.1, 'bulle');
+            this.add.image(window_width - 120 - 50, game.config.height * 0.1, 'piece');
+
+            var textConfig = { fontSize: '24px', color: '#2689a7', fontFamily: 'Ranchers' };
+            sommeText = this.add.text(120, game.config.height * 0.1, "Somme (" + somme.toString() + ")", textConfig);
+            sommeText.setOrigin(0.5, 0.5);
+
+            var scoreConfig = { fontSize: '32px', color: '#FFA07A', fontFamily: 'Ranchers' };
+            scoreText = this.add.text(window_width - 120, game.config.height * 0.1, score.toString(),
+                scoreConfig
+            )
+
+            var timer = this.time.addEvent({
+                delay: 1000,                // ms
+                callback: createBulle,
+                args: [this],
+                callbackScope: this,
+                loop: true,
+                repeat: 0,
+                startAt: 0,
+                timeScale: 1,
+                paused: false
+            });
+
+            this.input.on('gameobjectup', (pointer, gameobject) => {
+                bulleCount++;
+                const index = bulles.indexOf(gameobject);
+                console.log(index);
+                somme += numberArray[index];
+                console.log(somme);
+                bulles[index].destroy();
+                if (somme > 10) {
+                    score -= bulleCount;
+                    bulleCount = 0;
+                    somme = 0;
+                }
+                else if (somme == 10) {
+                    score += bulleCount;
+                    bulleCount = 0;
+                    somme = 0;
+                }
+                sommeText.setText("Somme(" + somme.toString() + ")");
+                scoreText.setText(score.toString());
+            });
+        }
+
+        function update() {
+
+        }
+
+        function removeArray(array, index) {
+            console.log(array.length);
+            return array.splice(index, 1);
+        }
+
+        function createBulle(scene) {
+            var x = Math.floor(Math.random() * window_width - 32) + 32;
+            var number = Math.floor(Math.random() * 8) + 1;
+            var bulle = scene.physics.add.sprite(x, window_height + 32, number.toString());
+            bulle.setInteractive();
+            bulle.setBounce(1.0);
+            bulle.setCollideWorldBounds(true);
+            bulles.push(bulle);
+            numberArray.push(number);
+        }
+
+    </script>
+
+</body>
+
+</html>
