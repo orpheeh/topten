@@ -5,10 +5,48 @@
     <title>WEJV10 - Top ten</title>
     <link href="https://fonts.googleapis.com/css2?family=Ranchers&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser-arcade-physics.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Ranchers', cursive;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            height: 100vh;
+            background-color: black;
+            color: white;
+        }
+
+        h1 {
+            padding-bottom: 40px;
+            color: #FFA07A;
+        }
+
+        .credit {
+            position: absolute;
+            text-align: center;
+            bottom: 20px;
+            left: 0px;
+            width: 100vw;
+        }
+
+        #mygame {
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 
 <body>
-
+    <h1>Top Ten</h1>
+    <div id="mygame"></div>
+    <p class="credit">Orphée et Edward, WEJV10 - 2020</p>
     <script>
 
         let bulles = [];
@@ -18,9 +56,11 @@
         const window_height = 480;
 
         var config = {
+            parent: 'mygame',
             type: Phaser.AUTO,
             width: window_width,
             height: window_height,
+            autoCenter: true,
             scene: {
                 preload: preload,
                 create: create,
@@ -54,15 +94,6 @@
             this.load.image('7', 'assets/7.png');
             this.load.image('8', 'assets/8.png');
             this.load.image('9', 'assets/9.png');
-            /* this.load.image('10', 'assets/10.png');
-             this.load.image('11', 'assets/11.png');
-             this.load.image('12', 'assets/12.png');
-             this.load.image('13', 'assets/13.png');
-             this.load.image('14', 'assets/14.png');
-             this.load.image('15', 'assets/15.png');
-             this.load.image('16', 'assets/16.png');
-             this.load.image('17', 'assets/17.png');
-             this.load.image('18', 'assets/18.png');*/
         }
 
         function create() {
@@ -75,12 +106,12 @@
             sommeText.setOrigin(0.5, 0.5);
 
             var scoreConfig = { fontSize: '32px', color: '#FFA07A', fontFamily: 'Ranchers' };
-            scoreText = this.add.text(window_width - 120, game.config.height * 0.1, score.toString(),
+            scoreText = this.add.text(window_width - 120, game.config.height * 0.08, score.toString(),
                 scoreConfig
             )
 
             var timer = this.time.addEvent({
-                delay: 1000,                // ms
+                delay: 2000,                // ms
                 callback: createBulle,
                 args: [this],
                 callbackScope: this,
