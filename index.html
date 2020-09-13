@@ -84,6 +84,7 @@
         var score = 0;
         var bulleCount = 0;
         var bulleDestroyCount = 0;
+        const MAX_BULLE = 10;
 
         function preload() {
             this.load.image('fond', 'assets/Fond.jpg');
@@ -101,12 +102,20 @@
 
             this.load.audio('music', 'assets/audio/music.mp3');
             this.load.audio('coin', 'assets/audio/coin.wav');
+            this.load.audio('bubble', 'assets/audio/bubble.wav');
+
         }
 
         function create() {
             this.add.image(window_width / 2, window_height / 2, 'fond');
             this.add.image(50, game.config.height * 0.1, 'bulle');
             this.add.image(window_width - 120 - 50, game.config.height * 0.1, 'piece');
+
+            music = this.sound.add('music');
+            music.play();
+
+            coin = this.sound.add('coin');
+            bubble = this.sound.add('bubble');
 
             var textConfig = { fontSize: '24px', color: '#2689a7', fontFamily: 'Ranchers' };
             sommeText = this.add.text(120, game.config.height * 0.1, "Somme (" + somme.toString() + ")", textConfig);
@@ -145,6 +154,7 @@
                     score += bulleCount;
                     bulleCount = 0;
                     somme = 0;
+                    coin.play();
                 }
                 sommeText.setText("Somme(" + somme.toString() + ")");
                 scoreText.setText(score.toString());
@@ -152,11 +162,10 @@
         }
 
         function update() {
-            if (bulles.length - bulleDestroyCount >= 5) {
+            if (bulles.length - bulleDestroyCount >= MAX_BULLE) {
                 gameOver(this);
             }
-            if (score < 0) {
-                score = 0;
+            else if (score < 0) {
                 gameOver(this);
             }
         }
@@ -190,6 +199,7 @@
             bulle.setCollideWorldBounds(true);
             bulles.push(bulle);
             numberArray.push(number);
+            bubble.play();
         }
 
     </script>
