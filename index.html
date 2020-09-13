@@ -15,6 +15,7 @@
             box-sizing: border-box;
             font-family: 'Ranchers', cursive;
         }
+
         body {
             display: flex;
             flex-direction: column;
@@ -82,6 +83,7 @@
         var somme = 0;
         var score = 0;
         var bulleCount = 0;
+        var bulleDestroyCount = 0;
 
         function preload() {
             this.load.image('fond', 'assets/Fond.jpg');
@@ -96,6 +98,9 @@
             this.load.image('7', 'assets/7.png');
             this.load.image('8', 'assets/8.png');
             this.load.image('9', 'assets/9.png');
+
+            this.load.audio('music', 'assets/audio/music.mp3');
+            this.load.audio('coin', 'assets/audio/coin.wav');
         }
 
         function create() {
@@ -127,10 +132,10 @@
             this.input.on('gameobjectup', (pointer, gameobject) => {
                 bulleCount++;
                 const index = bulles.indexOf(gameobject);
-                console.log(index);
                 somme += numberArray[index];
                 console.log(somme);
                 bulles[index].destroy();
+                bulleDestroyCount++;
                 if (somme > 10) {
                     score -= bulleCount;
                     bulleCount = 0;
@@ -147,11 +152,32 @@
         }
 
         function update() {
+            if (bulles.length - bulleDestroyCount >= 5) {
+                gameOver(this);
+            }
+            if (score < 0) {
+                score = 0;
+                gameOver(this);
+            }
+        }
 
+        function gameOver(scene) {
+            var rect = new Phaser.Geom.Rectangle(0, 0, window_width, window_height);
+
+            var graphics = scene.add.graphics({ fillStyle: { color: 0x0000ff } });
+
+            graphics.fillRectShape(rect);
+
+            var scoreConfig = { fontSize: '32px', color: '#FFFFFF', fontFamily: 'Ranchers' };
+            scene.add.text(window_width * 0.1, game.config.height * 0.08, "Game Over",
+                scoreConfig
+            );
+            scene.add.text(window_width * 0.1, game.config.height * 0.3, "Votre score: " + score.toString(),
+                { fontSize: '24px', color: '#FFFFFF', fontFamily: 'Ranchers' }
+            );
         }
 
         function removeArray(array, index) {
-            console.log(array.length);
             return array.splice(index, 1);
         }
 
